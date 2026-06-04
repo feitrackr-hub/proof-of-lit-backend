@@ -68,7 +68,7 @@ let score = 0;
     litTweets.forEach(t => {
       const m = t.public_metrics;
       impressions += m.impression_count || 0;
-      score += (m.impression_count || 0)  0.01 + (m.like_count || 0)  2 + (m.retweet_count || 0)  5 + (m.reply_count || 0)  3;
+      `score += (m.impression_count || 0)  0.01 + (m.like_count || 0)  2 + (m.retweet_count || 0)  5 + (m.reply_count || 0)  3;`
     });
 
 const tier = score >= 10000 ? 'OG Lighter' : score >= 5000 ? 'Degen' : score >= 1000 ? 'Believer' : 'Lurker';
