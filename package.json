@@ -1,0 +1,1 @@
+{"name":"proof-of-lit-backend","version":"1.0.0","dependencies":{"express":"","node-fetch":"","cors":"*"}}
