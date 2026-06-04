@@ -1,0 +1,74 @@
+<!-- Add this inside your existing search result section -->
+
+<!-- Replace your searchUser() function with this -->
+<script>
+async function searchUser() {
+  const input = document.getElementById('searchInput').value.trim().replace('@','');
+  const resultDiv = document.getElementById('searchResult');
+  if (!input) return;
+
+  resultDiv.innerHTML = '<p style="color:#ff00ff">searching...</p>';
+
+  try {
+    const res = await fetch(`http://localhost:3001/search?username=${encodeURIComponent(input)}`);
+    if (!res.ok) {
+      resultDiv.innerHTML = '<p style="color:red">User not found or has no $LIT tweets.</p>';
+      return;
+    }
+    const user = await res.json();
+
+    let tweetsHTML = user.tweets.map(t => `
+      <tr>
+        <td><a href="${t.url}" target="_blank" style="color:#00ffff">${t.text.substring(0,80)}...</a></td>
+        <td>${t.impressions.toLocaleString()}</td>
+        <td>${t.retweets.toLocaleString()}</td>
+        <td>${t.likes.toLocaleString()}</td>
+        <td>${t.replies.toLocaleString()}</td>
+      </tr>
+    `).join('');
+
+    resultDiv.innerHTML = `
+      <div style="background:#0a0a0a;border:2px solid #ff00ff;padding:16px;margin-top:16px">
+        <h3 style="color:#ff00ff">@${user.username} — Rank #${user.rank}</h3>
+        <p style="color:#00ff00">Total Impressions: <strong>${user.total_impressions.toLocaleString()}</strong></p>
+        <table style="width:100%;border-collapse:collapse;margin-top:12px">
+          <thead>
+            <tr style="color:#ffff00;border-bottom:1px solid #333">
+              <th style="text-align:left;padding:6px">Tweet</th>
+              <th style="padding:6px">Impressions</th>
+              <th style="padding:6px">Retweets</th>
+              <th style="padding:6px">Likes</th>
+              <th style="padding:6px">Replies</th>
+            </tr>
+          </thead>
+          <tbody>${tweetsHTML}</tbody>
+        </table>
+      </div>
+    `;
+  } catch (e) {
+    resultDiv.innerHTML = '<p style="color:red">Error connecting to server.</p>';
+  }
+}
+
+async function loadLeaderboard() {
+  const tbody = document.getElementById('leaderboardBody');
+  tbody.innerHTML = '<tr><td colspan="3" style="color:#ff00ff">loading...</td></tr>';
+
+  try {
+    const res = await fetch('http://localhost:3001/leaderboard');
+    const board = await res.json();
+
+    tbody.innerHTML = board.slice(0, 50).map(u => `
+      <tr>
+        <td>${u.rank}</td>
+        <td>@${u.username}</td>
+        <td>${u.total_impressions.toLocaleString()}</td>
+      </tr>
+    `).join('');
+  } catch (e) {
+    tbody.innerHTML = '<tr><td colspan="3" style="color:red">Failed to load</td></tr>';
+  }
+}
+
+window.onload = loadLeaderboard;
+</script>
