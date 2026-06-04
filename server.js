@@ -14,6 +14,7 @@ app.get('/search', async (req, res) => {
   if (!query) return res.status(400).json({ error: 'Missing query param q' });
 
   try {
+    console.log('BEARER_TOKEN:', BEARER_TOKEN ? 'set' : 'MISSING');
     const url = `https://api.twitter.com/2/tweets/search/recent?query=${encodeURIComponent(query)}&max_results=10&tweet.fields=public_metrics,created_at,author_id&expansions=author_id&user.fields=username,name,profile_image_url`;
     const response = await fetch(url, {
       headers: { Authorization: `Bearer ${BEARER_TOKEN}` }
