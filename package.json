@@ -1,1 +1,1 @@
-{"name":"proof-of-lit-backend","version":"1.0.0","dependencies":{"express":"","node-fetch":"","cors":"*"}}
+{"name":"proof-of-lit-backend","version":"1.0.0","main":"server.js","scripts":{"start":"node server.js"},"dependencies":{"express":"","node-fetch":"","cors":"*"}}
